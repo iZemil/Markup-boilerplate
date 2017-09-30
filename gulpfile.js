@@ -15,8 +15,10 @@ var gulp = require('gulp'),
 var paths = {
   public: './public/',
   sass: './src/sass/',
-  css: './public/css/',
-  data: './src/_data/'
+  css: './public/static/css/',
+  i: './public/static/i',
+  data: './src/_data/',
+  js: './public/static/js/'
 };
 
 /**
@@ -28,7 +30,9 @@ gulp.task('pug', function () {
     .pipe(data(function (file) {
       return require(paths.data + path.basename(file.path) + '.json');
     }))
-    .pipe(pug())
+    .pipe(pug({
+      pretty: true
+    }))
     .on('error', function (err) {
       process.stderr.write(err.message + '\n');
       this.emit('end');
@@ -42,6 +46,19 @@ gulp.task('pug', function () {
 gulp.task('rebuild', ['pug'], function () {
   browserSync.reload();
 });
+
+/**
+ * Live reload the browser for scripts
+ */
+gulp.task('scripts-pipe', function () {
+  return gulp.src('./src/js/*.js')
+  .pipe(gulp.dest(paths.js));
+});
+
+gulp.task('script', ['scripts-pipe'], function () {
+  browserSync.reload();
+});
+
 
 /**
  * Wait for pug and sass tasks, then launch the browser-sync Server
@@ -63,10 +80,10 @@ gulp.task('sass', function () {
   return gulp.src(paths.sass + '*.scss')
     .pipe(sass({
       includePaths: [paths.sass],
-      outputStyle: 'compressed'
+      // outputStyle: 'compressed' ---> uncomment to compress css
     }))
     .on('error', sass.logError)
-    .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], {
+    .pipe(prefix(['last 15 versions', '> 1%'], {
       cascade: true
     }))
     .pipe(gulp.dest(paths.css))
@@ -78,10 +95,12 @@ gulp.task('sass', function () {
 /**
  * Watch scss files for changes & recompile
  * Watch .pug files run pug-rebuild then reload BrowserSync
+ * Watch script.js
  */
 gulp.task('watch', function () {
   gulp.watch(paths.sass + '**/*.scss', ['sass']);
   gulp.watch('./src/**/*.pug', ['rebuild']);
+  gulp.watch('src/js/*.js', ['script']);
 });
 
 // Build task compile sass and pug.

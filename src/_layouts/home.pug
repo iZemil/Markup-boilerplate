@@ -3,11 +3,14 @@ html
   head
     title= title
     meta(charset="utf-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1")
+    meta(name="viewport" id="metaViewport" content="width=device-width, initial-scale=1.0, maximum-scale=1")
     block head_end
-	
-  body
+    script(type='text/javascript') if (screen.width <= 480) {document.getElementById('metaViewport').setAttribute('content', 'width=480')}
+  
+  body.page
     block content
-		
-    script(type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    
+    script(src="static/js/ext/jquery-3.2.1.min.js")
+    script(src='static/js/ext/owl.carousel.min.js')
+    script(src='static/js/ext/jquery.fancybox.min.js')
     block body_end

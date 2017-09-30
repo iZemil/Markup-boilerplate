@@ -1,25 +1,81 @@
-/*	FONTS
-------------------------*/
-
-@import url(https://fonts.googleapis.com/css?family=Raleway:400,700);
-
-/*	TYPOGRAPHY
-–––––––––––––––––––––––––––*/
-
-body {
-  font-family: 'Raleway', Arial, sans-serif, ;
-  color: #555;
-  font-size: 100%;
-  line-height: 1.5;
-  background-color: #f2f2f2;
-  margin: 0;
+// FONTS
+@font-face {
+  font-family: 'PT Sans';
+  src: url('fonts/PTSans-Regular.eot');
+  src: url('fonts/PTSans-Regular.eot?#iefix') format('embedded-opentype'),
+    url('fonts/PTSans-Regular.woff2') format('woff2'),
+    url('fonts/PTSans-Regular.woff') format('woff'),
+    url('fonts/PTSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
+@font-face {
+  font-family: 'PT Sans';
+  src: url('fonts/PTSans-Bold.eot');
+  src: url('fonts/PTSans-Bold.eot?#iefix') format('embedded-opentype'),
+    url('fonts/PTSans-Bold.woff2') format('woff2'),
+    url('fonts/PTSans-Bold.woff') format('woff'),
+    url('fonts/PTSans-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
 
-/* ------ Normalize ----- */
+// checkboxes
+.checkbox:not(checked) {
+  position: absolute;
+  opacity: 0;
+}
+.checkbox + label {
+  width: 100%;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 40px;
+}
+.checkbox:not(checked) + label {
+  position: relative;
+}
+.checkbox_front:not(checked) + label {
+  position: relative;
+  padding-left: 30px;
+}
+.checkbox:not(checked) + label:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -30px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #dcdcdc;
+}
+.checkbox_front:not(checked) + label:before {
+  left: 0;
+}
+.checkbox_front:not(checked).warning + label:before {
+  border-color: red;
+}
+.checkbox:not(checked) + label:after {
+  display: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -30px;
+  width: 20px;
+  height: 20px;
+  background: url(../i/ico-check_red.png) no-repeat 50%;
+}
+.checkbox_front:not(checked) + label:after {
+  left: 0px;
+}
+.checkbox:checked + label:after {
+  display: inline-block;
+}
 
-*,
-*:after,
-*:before {
-  box-sizing: border-box;
+// MISC
+input {
+  &.warning {
+    border: 1px solid red;
+    transition: $td;
+  }
 }
