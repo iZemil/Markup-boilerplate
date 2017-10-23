@@ -5,7 +5,7 @@ html
     meta(charset="utf-8")
     meta(name="viewport" id="metaViewport" content="width=device-width, initial-scale=1.0, maximum-scale=1")
     block head_end
-    script(type='text/javascript') if (screen.width <= 480) {document.getElementById('metaViewport').setAttribute('content', 'width=480')}
+    script(type='text/javascript') if (screen.width <= 480) {document.getElementById('metaViewport').setAttribute('content', 'width=480, user-scalable=0')}
   
   body.page
     block content
