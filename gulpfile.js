@@ -7,7 +7,9 @@ var gulp = require('gulp'),
   pug = require('gulp-pug'),
   prefix = require('gulp-autoprefixer'),
   sass = require('gulp-sass'),
-  browserSync = require('browser-sync');
+  browserSync = require('browser-sync'),
+  strip = require('gulp-strip-comments'),
+  minify = require('gulp-minify');
 
 /*
  * Directories here
@@ -52,7 +54,16 @@ gulp.task('rebuild', ['pug'], function () {
  */
 gulp.task('scripts-pipe', function () {
   return gulp.src('./src/js/*.js')
-  .pipe(gulp.dest(paths.js));
+    .pipe(strip())
+    .pipe(minify({
+      ext:{
+        src:'.js',
+        min:'.js'
+      },
+      exclude: ['tasks'],
+      ignoreFiles: ['.combo.js', '-min.js']
+    }))
+    .pipe(gulp.dest(paths.js));
 });
 
 gulp.task('script', ['scripts-pipe'], function () {
