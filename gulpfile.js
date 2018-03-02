@@ -2,14 +2,14 @@
 "use strict";
 
 var gulp = require('gulp'),
-  path = require('path'),
-  data = require('gulp-data'),
-  pug = require('gulp-pug'),
-  prefix = require('gulp-autoprefixer'),
-  sass = require('gulp-sass'),
-  browserSync = require('browser-sync'),
-  strip = require('gulp-strip-comments'),
-  minify = require('gulp-minify');
+    path = require('path'),
+    data = require('gulp-data'),
+    pug = require('gulp-pug'),
+    prefix = require('gulp-autoprefixer'),
+    sass = require('gulp-sass'),
+    browserSync = require('browser-sync'),
+    strip = require('gulp-strip-comments'),
+    minify = require('gulp-minify');
 
 /*
  * Directories here
