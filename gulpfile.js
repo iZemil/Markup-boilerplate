@@ -1,125 +1,105 @@
-/*global require*/
 "use strict";
 
 var gulp = require('gulp'),
     path = require('path'),
-    data = require('gulp-data'),
+    rev = require('gulp-rev-append'),
     pug = require('gulp-pug'),
     prefix = require('gulp-autoprefixer'),
-    sass = require('gulp-sass'),
+    scss = require('gulp-sass'),
+    uglify = require('gulp-uglify'),
+    imagemin = require('gulp-imagemin'),
+    pump = require('pump'),
     browserSync = require('browser-sync'),
-    strip = require('gulp-strip-comments'),
     minify = require('gulp-minify');
 
-/*
- * Directories here
- */
 var paths = {
-  public: './public/',
-  sass: './src/sass/',
-  css: './public/static/css/',
-  i: './public/static/i',
-  data: './src/_data/',
-  js: './public/static/js/'
+    pug: 'src/pug/',
+    scss: 'src/scss/',
+    js: 'src/js/',
+    img: 'src/img/',
+    public: 'public/',
+    css: 'public/static/css/',
+    builtJs: 'public/static/js',
+    i: 'public/static/i/'
 };
 
-/**
- * Compile .pug files and pass in data from json file
- * matching file name. index.pug - index.pug.json
- */
 gulp.task('pug', function () {
-  return gulp.src('./src/*.pug')
-    .pipe(data(function (file) {
-      return require(paths.data + path.basename(file.path) + '.json');
-    }))
-    .pipe(pug({
-      pretty: true
-    }))
-    .on('error', function (err) {
-      process.stderr.write(err.message + '\n');
-      this.emit('end');
-    })
-    .pipe(gulp.dest(paths.public));
+    return gulp.src(paths.pug + '*.pug')
+        .pipe(pug({
+            pretty: true
+        }))
+        .on('error', function (err) {
+            process.stderr.write(err.message + '\n');
+            this.emit('end');
+        })
+        .pipe(gulp.dest(paths.public))
+        .pipe(browserSync.reload({ stream: true }))
 });
 
-/**
- * Recompile .pug files and live reload the browser
- */
-gulp.task('rebuild', ['pug'], function () {
-  browserSync.reload();
+gulp.task('scss', function () {
+    return gulp.src(paths.scss + '**/*.scss')
+        .pipe(scss({
+            outputStyle: 'compressed' // comment to uncompress css
+        }))
+        .on('error', scss.logError)
+        .pipe(prefix(['last 15 versions', '> 1%'], { cascade: true }))
+        .pipe(gulp.dest(paths.css))
+        .pipe(browserSync.reload({ stream: true }))
 });
 
-/**
- * Live reload the browser for scripts
- */
-gulp.task('scripts-pipe', function () {
-  return gulp.src('./src/js/*.js')
-    .pipe(strip())
-    .pipe(minify({
-      ext:{
-        src:'.js',
-        min:'.js'
-      },
-      exclude: ['tasks'],
-      ignoreFiles: ['.combo.js', '-min.js']
-    }))
-    .pipe(gulp.dest(paths.js));
+gulp.task('js', function () {
+    return gulp.src(paths.js + '**/*.js')
+        .pipe(gulp.dest(paths.builtJs))
+        .pipe(browserSync.reload({ stream: true }))
 });
 
-gulp.task('script', ['scripts-pipe'], function () {
-  browserSync.reload();
+gulp.task('img', () =>
+    gulp.src(paths.img + '*')
+        .pipe(imagemin({
+            interlaced: true,
+            progressive: true,
+            optimizationLevel: 5,
+            svgoPlugins: [{removeViewBox: true}]
+        }))
+        .pipe(gulp.dest(paths.i))
+        .pipe(browserSync.reload({ stream: true }))
+);
+
+// added hash query strings
+gulp.task('rev', function() {
+    gulp.src(paths.public + '*.html')
+        .pipe(rev())
+        .pipe(gulp.dest(paths.public));
 });
 
-
-/**
- * Wait for pug and sass tasks, then launch the browser-sync Server
- */
-gulp.task('browser-sync', ['sass', 'pug'], function () {
-  browserSync({
-    server: {
-      baseDir: paths.public
-    },
-    notify: false
-  });
+// dev server with hot reload web-page
+gulp.task('browser-sync', ['scss', 'pug', 'js', 'img'], function () {
+    browserSync({
+        server: {
+            baseDir: paths.public
+        },
+        notify: false
+    });
 });
 
-/**
- * Compile .scss files into public css directory With autoprefixer no
- * need for vendor prefixes then live reload the browser.
- */
-gulp.task('sass', function () {
-  return gulp.src(paths.sass + '*.scss')
-    .pipe(sass({
-      includePaths: [paths.sass],
-      // outputStyle: 'compressed' ---> uncomment to compress css
-    }))
-    .on('error', sass.logError)
-    .pipe(prefix(['last 15 versions', '> 1%'], {
-      cascade: true
-    }))
-    .pipe(gulp.dest(paths.css))
-    .pipe(browserSync.reload({
-      stream: true
-    }));
+// optimisations
+gulp.task('compress', ['pug', 'scss', 'js', 'img'], function (cb) {
+    pump([
+        gulp.src(paths.js + '*.js'),
+        uglify(),
+        gulp.dest(paths.builtJs)
+    ], cb
+);
 });
 
-/**
- * Watch scss files for changes & recompile
- * Watch .pug files run pug-rebuild then reload BrowserSync
- * Watch script.js
- */
-gulp.task('watch', function () {
-  gulp.watch(paths.sass + '**/*.scss', ['sass']);
-  gulp.watch('./src/**/*.pug', ['rebuild']);
-  gulp.watch('src/js/*.js', ['script']);
+gulp.task('watch-files', ['browser-sync'], function () {
+    gulp.watch(paths.scss + '**/*.scss', ['scss', 'rev']);
+    gulp.watch(paths.pug + '**/*.pug', ['pug']);
+    gulp.watch(paths.js + '**/*.js', ['js', 'rev']);
+    gulp.watch(paths.img + '*', ['img']);
 });
 
-// Build task compile sass and pug.
-gulp.task('build', ['sass', 'pug']);
-
-/**
- * Default task, running just `gulp` will compile the sass,
- * compile the jekyll site, launch BrowserSync then watch
- * files for changes
- */
-gulp.task('default', ['browser-sync', 'watch']);
+// gulp main commands
+gulp.task('default', ['build']);
+gulp.task('build', ['compress']);
+gulp.task('dev', ['watch-files']);

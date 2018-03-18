@@ -1,14 +1,27 @@
-## Pug/Sass(scss syntax) Starter project with Gulp.
+# Simple gulp boilerplate for a markup
 
-В проекте используется:
+### For start work:
 
-1. [browser-sync](https://github.com/browsersync/browser-sync) Локальный сервер
-2. [gulp-pug](https://github.com/jamen/gulp-pug) Компилятор pug файлов
-3. [gulp-data](https://github.com/colynb/gulp-data) Передача данных в формате JSON в pug разметку
-4. [gulp-sass](https://github.com/dlmanning/gulp-sass) Компиляция sass стилей в css (! проект использует scss синтаксис)
-5. [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) Автопрефиксер
+1. install node.js (includes npm)
+2. `npm install`
 
-### Для начала работы
-- установка пакетов `npm install`
+development: `npm run dev`
+production:  `npm run build`
+prod-server: `npm run prod-server`
 
-✅ запуск сборки командой `gulp`
+
+### Components: 
+
+- pug
+- scss
+- dev-server
+- minification (css, js, images)
+- owlcarousel, fancybox (v.3)
+
+## Markup checklist:
+
+1. image optimisations
+2. desktop browser support (chrome, ff, ie, safari)
+3. mobile support (android, ios)
+4. deleted unnecessary code (e.g. comments, hashes)
+5. add readme.md

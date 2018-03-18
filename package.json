@@ -1,23 +1,25 @@
 {
   "name": "gulp-pug-sass-starter",
-  "version": "1.0.0",
-  "description": "A Pug and Sass starter project using Gulp.",
-  "main": "gulpfile.js",
-  "author": "zemil.ru",
+  "version": "2.0.0",
+  "description": "A Pug and Scss starter project using Gulp.",
+  "author": "zemil",
   "scripts": {
-    "start": "gulp",
     "build": "gulp build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "gulp watch-files",
+    "prod-server": "cd ./public && http-server"
   },
   "devDependencies": {
     "browser-sync": "^2.9.3",
-    "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.0.1",
-    "gulp-data": "^1.2.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-imagemin": "^4.1.0",
     "gulp-minify": "^2.1.0",
     "gulp-pug": "^3.0.3",
-    "gulp-sass": "^2.0.4",
-    "gulp-strip-comments": "^2.5.2"
+    "gulp-rev-append": "^0.1.8",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "http-server": "^0.11.1",
+    "pump": "^3.0.0"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,9 @@
     "gulp",
     "pug",
     "sass",
-    "browsersync"
+    "browsersync",
+    "auto",
+    "markup",
+    "boilerplate"
   ]
 }

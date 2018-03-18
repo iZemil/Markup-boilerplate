@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  console.log('Start rock!');
+  console.log('Start rock?!');
   
   // INIT CAROUSELS
 //  $(".main-crsl").owlCarousel({

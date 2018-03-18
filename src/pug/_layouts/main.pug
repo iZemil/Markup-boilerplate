@@ -1,0 +1,33 @@
+doctype html
+html
+    head
+        title Some page
+        meta(charset="utf-8")
+        meta(name="viewport" id="metaViewport" content="width=device-width, initial-scale=1.0, maximum-scale=1")
+        meta(name="description" content="desc")
+        
+        meta(property="og:title" content="title")
+        meta(property="og:url" content="https://")
+        meta(property="og:description" content="desc")
+        meta(property="og:type" content="article")
+        meta(property="og:image" content="https://.png")
+        meta(property="vk:image" content="https://.png")
+        meta(name="twitter:card" content="summary")
+        meta(name="twitter:title" content="title")
+        meta(name="twitter:description" content="desc")
+        meta(name="twitter:image" content="https://-.png")
+
+        link(rel='icon' type='image/x-icon' href='favicon.ico')
+        link(rel="stylesheet" href="static/css/owlcarousel/owl.carousel.min.css")
+        link(rel="stylesheet" href="static/css/style.css?rev=@@hash")
+        block head_end
+        script(type='text/javascript').
+            if (screen.width <= 480) {document.getElementById('metaViewport').setAttribute('content', 'width=480, user-scalable=0')}
+    body.page
+        block content
+
+        block body_end
+        script(src="static/js/ext/jquery-3.2.1.min.js")
+        script(src='static/js/ext/owl.carousel.min.js')
+        script(src='static/js/ext/jquery.fancybox.min.js')
+        script(type="text/javascript" src="static/js/script.js?rev=@@hash")

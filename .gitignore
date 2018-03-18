@@ -1,5 +1,6 @@
-.idea
 node_modules
-.sass-cache
+public
 *.thumb
 npm-debug.log
+.idea
+.sass-cache
